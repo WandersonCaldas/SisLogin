@@ -1,0 +1,9 @@
+C:\inetpub\wwwroot\SisLogin\SisLogin\bin\SisLogin.dll.config
+C:\inetpub\wwwroot\SisLogin\SisLogin\bin\SisLogin.dll
+C:\inetpub\wwwroot\SisLogin\SisLogin\bin\SisLogin.pdb
+C:\inetpub\wwwroot\SisLogin\SisLogin\bin\SisLogin.xml
+C:\inetpub\wwwroot\SisLogin\SisLogin\obj\Debug\SisLogin.Resources.resources
+C:\inetpub\wwwroot\SisLogin\SisLogin\obj\Debug\SisLogin.vbproj.GenerateResource.Cache
+C:\inetpub\wwwroot\SisLogin\SisLogin\obj\Debug\SisLogin.dll
+C:\inetpub\wwwroot\SisLogin\SisLogin\obj\Debug\SisLogin.xml
+C:\inetpub\wwwroot\SisLogin\SisLogin\obj\Debug\SisLogin.pdb
