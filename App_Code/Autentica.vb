@@ -10,17 +10,76 @@ Imports System.ComponentModel
 Public Class Autentica
     Inherits System.Web.Services.WebService
 
-    <WebMethod()> _
-    Public Function HelloWorld() As String
-        Return "Hello World"
+    '<WebMethod()> _
+    'Public Function HelloWorld() As String
+    '    Return "Hello World"
+    'End Function
+
+    '<WebMethod(Description:="TESTE")> _
+    'Public Function Teste() As Result
+    '    Dim retorno As New Result()
+    '    Dim objUsuarioBO As New UsuarioBO()
+
+    '    retorno = objUsuarioBO.Validar(1)
+
+    '    Return retorno
+    'End Function
+
+    <WebMethod(Description:="Cadastrar novo usuário")> _
+    Public Function CadastrarUsuario(ByVal txt_nome As String, ByVal txt_senha As String, ByVal txt_email As String) As Result
+        Dim retorno As New Result()
+        Dim objUsuario As New Usuario()
+        Dim objUsuarioBO As New UsuarioBO()
+
+        objUsuario.txt_nome = txt_nome.ToString()
+        objUsuario.txt_senha = txt_senha.ToString()
+        objUsuario.txt_email = txt_email.ToString()
+
+        retorno = objUsuarioBO.CadastrarUsuario(objUsuario)
+
+        Return retorno
     End Function
 
-    <WebMethod(Description:="TESTE")> _
-    Public Function Teste() As Result
+    <WebMethod(Description:="Alterar novo usuário")> _
+    Public Function AlterarUsuario(ByVal id As Integer, ByVal txt_nome As String, ByVal txt_email As String) As Result
         Dim retorno As New Result()
-        Dim objUsuarioDAO As New UsuarioDAO()
+        Dim objUsuario As New Usuario()
+        Dim objUsuarioBO As New UsuarioBO()
 
-        retorno = objUsuarioDAO.Teste()
+        objUsuario.id = id
+        objUsuario.txt_nome = txt_nome.ToString()
+        objUsuario.txt_email = txt_email.ToString()
+
+        retorno = objUsuarioBO.AlterarUsuario(objUsuario)
+
+        Return retorno
+    End Function
+
+
+    <WebMethod(Description:="Listar usuário")> _
+    Public Function ListarUsuario(ByVal id As Integer, ByVal txt_nome As String, ByVal txt_senha As String) As Result
+        Dim retorno As New Result()
+        Dim objUsuario As New Usuario()
+        Dim objUsuarioBO As New UsuarioBO()
+
+        objUsuario.id = id
+        objUsuario.txt_nome = txt_nome.ToString()
+        objUsuario.txt_email = txt_senha.ToString()
+
+        retorno = objUsuarioBO.ListarUsuario(objUsuario)
+
+        Return retorno
+    End Function
+
+    <WebMethod(Description:="Cancelar usuário")> _
+    Public Function CancelarUsuario(ByVal id As Integer) As Result
+        Dim retorno As New Result()
+        Dim objUsuario As New Usuario()
+        Dim objUsuarioBO As New UsuarioBO()
+
+        objUsuario.id = id
+
+        retorno = objUsuarioBO.CancelarUsuario(objUsuario)
 
         Return retorno
     End Function

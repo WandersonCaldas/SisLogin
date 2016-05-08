@@ -96,6 +96,9 @@
     <Content Include="App_Code\BO\clsException.vb" />
     <Content Include="App_Code\BO\ExceptionTO.vb" />
     <Content Include="App_Code\BO\ExceptionResponse.vb" />
+    <Content Include="App_Code\BO\UsuarioBO.vb" />
+    <Content Include="App_Code\Constantes\Mensagem.vb" />
+    <Content Include="App_Code\Sistema\Conexao.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
