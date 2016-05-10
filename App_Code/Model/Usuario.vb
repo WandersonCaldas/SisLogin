@@ -31,6 +31,16 @@ Public Class Usuario
     End Property
     Private m_txt_senha As String
 
+    Public Property txt_nova_senha() As String
+        Get
+            Return m_txt_nova_senha
+        End Get
+        Set(ByVal value As String)
+            m_txt_nova_senha = value
+        End Set
+    End Property
+    Private m_txt_nova_senha As String
+
     Public Property txt_email() As String
         Get
             Return m_txt_email
@@ -41,13 +51,13 @@ Public Class Usuario
     End Property
     Private m_txt_email As String
 
-    Public Property cod_ativo() As Integer
+    Public Property cod_ativo() As Boolean
         Get
             Return m_cod_ativo
         End Get
-        Set(ByVal value As Integer)
+        Set(ByVal value As Boolean)
             m_cod_ativo = value
         End Set
     End Property
-    Private m_cod_ativo As Integer
+    Private m_cod_ativo As Boolean
 End Class

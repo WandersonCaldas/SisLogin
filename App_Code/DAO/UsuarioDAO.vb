@@ -4,23 +4,23 @@ Imports System.Data
 Imports System.Data.SqlClient
 
 Public Class UsuarioDAO
-    Public Function Teste() As Result
-        Dim retorno As New Result()
-        Dim listaUsuarios As New List(Of Usuario)
-        Dim objUsuario As New Usuario
+    'Public Function Teste() As Result
+    '    Dim retorno As New Result()
+    '    Dim listaUsuarios As New List(Of Usuario)
+    '    Dim objUsuario As New Usuario
 
-        Try
-            objUsuario.txt_nome = "WANDERSON CALDAS"
-            listaUsuarios.Add(objUsuario)
-            retorno.status = ResponseStatus.SUCESSO.Texto
-            retorno.Usuarios = listaUsuarios
-        Catch ex As Exception
-            retorno.status = ResponseStatus.FALHA.Texto
-            retorno.exception = clsException.CarregarErro(ex.Source, ex.Message, ex.StackTrace)
-        End Try
+    '    Try
+    '        objUsuario.txt_nome = "WANDERSON CALDAS"
+    '        listaUsuarios.Add(objUsuario)
+    '        retorno.status = ResponseStatus.SUCESSO.Texto
+    '        retorno.Usuarios = listaUsuarios
+    '    Catch ex As Exception
+    '        retorno.status = ResponseStatus.FALHA.Texto
+    '        retorno.exception = clsException.CarregarErro(ex.Source, ex.Message, ex.StackTrace)
+    '    End Try
 
-        Return retorno
-    End Function
+    '    Return retorno
+    'End Function
 
     Public Function CadastrarUsuario(ByVal objUsuario As Usuario) As Result
         Dim retorno As New Result()
@@ -65,6 +65,32 @@ Public Class UsuarioDAO
                     SqlComm.ExecuteNonQuery()
 
                     retorno.status = ResponseStatus.SUCESSO.Texto
+                End Using
+            End Using
+        Catch ex As Exception
+            retorno.status = ResponseStatus.FALHA.Texto
+            retorno.exception = clsException.CarregarErro(ex.Source, ex.Message, ex.StackTrace)
+        End Try
+
+        Return retorno
+    End Function
+
+    Public Function AlterarSenha(ByVal objUsuario As Usuario) As Result
+        Dim retorno As New Result()
+
+        Try
+            Using SqlConn As SqlConnection = Conexao.AbrirConexao()
+                Using SqlComm As New SqlCommand()
+                    SqlComm.Connection = SqlConn
+                    SqlComm.CommandType = CommandType.Text
+                    SqlComm.CommandText = "UPDATE tbl_usuario SET txt_senha = @txt_senha WHERE id = @id"
+                    SqlComm.Parameters.Clear()
+                    SqlComm.Parameters.Add("txt_senha", SqlDbType.VarChar).Value = objUsuario.txt_nova_senha
+                    SqlComm.Parameters.Add("id", SqlDbType.Int).Value = objUsuario.id
+                    SqlComm.ExecuteNonQuery()
+
+                    retorno.status = ResponseStatus.SUCESSO.Texto
+
                 End Using
             End Using
         Catch ex As Exception
@@ -154,6 +180,8 @@ Public Class UsuarioDAO
 
         Return retorno
     End Function
+
+#Region "VALIDAÇÕES DE USUÁRIO"
     Public Function VerificaExistenciaUsuario(ByVal objUsuario As Usuario) As Boolean
         Dim retorno As Boolean = False
 
@@ -176,4 +204,74 @@ Public Class UsuarioDAO
 
         Return retorno
     End Function
+
+    Public Function VerificaExistenciaUsuarioId(ByVal objUsuario As Usuario) As Boolean
+        Dim retorno As Boolean = False
+
+        Using SqlConn As SqlConnection = Conexao.AbrirConexao()
+            Using SqlComm As New SqlCommand()
+                SqlComm.Connection = SqlConn
+                SqlComm.CommandType = CommandType.Text
+                SqlComm.CommandText = "SELECT * FROM tbl_usuario WHERE id = @id"
+                SqlComm.Parameters.Clear()
+                SqlComm.Parameters.Add("id", SqlDbType.Int).Value = objUsuario.id
+
+                Using dr As SqlDataReader = SqlComm.ExecuteReader()
+                    If dr.HasRows() Then
+                        retorno = True
+                    End If
+                End Using
+            End Using
+        End Using
+
+        Return retorno
+    End Function
+
+    Public Function VerificaUsuarioAtivo(ByVal objUsuario As Usuario) As Boolean
+        Dim retorno As Boolean = False
+
+        Using SqlConn As SqlConnection = Conexao.AbrirConexao()
+            Using SqlComm As New SqlCommand()
+                SqlComm.Connection = SqlConn
+                SqlComm.CommandType = CommandType.Text
+                SqlComm.CommandText = "SELECT * FROM tbl_usuario WHERE id = @id AND cod_ativo = 1"
+                SqlComm.Parameters.Clear()
+                SqlComm.Parameters.Add("id", SqlDbType.Int).Value = objUsuario.id
+
+                Using dr As SqlDataReader = SqlComm.ExecuteReader()
+                    If dr.HasRows() Then
+                        retorno = True
+                    End If
+                End Using
+            End Using
+        End Using
+
+        Return retorno
+    End Function
+
+    Public Function ValidaSenhaAtual(ByVal objUsuario As Usuario) As Boolean
+        Dim retorno As Boolean = False
+
+        Using SqlConn As SqlConnection = Conexao.AbrirConexao()
+            Using SqlComm As New SqlCommand()
+                SqlComm.Connection = SqlConn
+                SqlComm.CommandType = CommandType.Text
+                SqlComm.CommandText = "SELECT * FROM tbl_usuario WHERE id = @id AND txt_senha = @txt_senha"
+                SqlComm.Parameters.Clear()
+                SqlComm.Parameters.Add("id", SqlDbType.Int).Value = objUsuario.id
+                SqlComm.Parameters.Add("txt_senha", SqlDbType.VarChar).Value = objUsuario.txt_senha
+
+                Using dr As SqlDataReader = SqlComm.ExecuteReader()
+                    If dr.HasRows() Then
+                        retorno = True
+                    End If
+                End Using
+            End Using
+        End Using
+
+        Return retorno
+    End Function
+#End Region
+
+
 End Class

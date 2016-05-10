@@ -40,7 +40,7 @@ Public Class Autentica
         Return retorno
     End Function
 
-    <WebMethod(Description:="Alterar novo usuário")> _
+    <WebMethod(Description:="Alterar usuário")> _
     Public Function AlterarUsuario(ByVal id As Integer, ByVal txt_nome As String, ByVal txt_email As String) As Result
         Dim retorno As New Result()
         Dim objUsuario As New Usuario()
@@ -55,6 +55,20 @@ Public Class Autentica
         Return retorno
     End Function
 
+    <WebMethod(Description:="Alterar senha")> _
+    Public Function AlterarSenha(ByVal id As Integer, ByVal txt_senha_atual As String, ByVal txt_nova_senha As String) As Result
+        Dim retorno As New Result()
+        Dim objUsuario As New Usuario()
+        Dim objUsuarioBO As New UsuarioBO()
+
+        objUsuario.id = id
+        objUsuario.txt_senha = txt_senha_atual.ToString()
+        objUsuario.txt_nova_senha = txt_nova_senha.ToString()
+
+        retorno = objUsuarioBO.AlterarSenha(objUsuario)
+
+        Return retorno
+    End Function
 
     <WebMethod(Description:="Listar usuário")> _
     Public Function ListarUsuario(ByVal id As Integer, ByVal txt_nome As String, ByVal txt_senha As String) As Result
