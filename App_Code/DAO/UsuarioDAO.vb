@@ -25,6 +25,7 @@ Public Class UsuarioDAO
 #Region "MÉTODOS"
     Public Function CadastrarUsuario(ByVal objUsuario As Usuario) As Result
         Dim retorno As New Result()
+
         Try
             Using SqlConn As SqlConnection = Conexao.AbrirConexao()
                 Using SqlComm As New SqlCommand()
