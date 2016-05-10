@@ -22,6 +22,7 @@ Public Class UsuarioDAO
     '    Return retorno
     'End Function
 
+#Region "MÉTODOS"
     Public Function CadastrarUsuario(ByVal objUsuario As Usuario) As Result
         Dim retorno As New Result()
         Try
@@ -180,6 +181,7 @@ Public Class UsuarioDAO
 
         Return retorno
     End Function
+#End Region
 
 #Region "VALIDAÇÕES DE USUÁRIO"
     Public Function VerificaExistenciaUsuario(ByVal objUsuario As Usuario) As Boolean
