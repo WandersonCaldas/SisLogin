@@ -70,15 +70,33 @@ Public Class Autentica
         Return retorno
     End Function
 
-    <WebMethod(Description:="Listar usuário")> _
-    Public Function ListarUsuario(ByVal id As Integer, ByVal txt_nome As String, ByVal txt_senha As String) As Result
+    <WebMethod(Description:="Autenticar usuário")> _
+    Public Function AutenticarUsuario(ByVal txt_email As String, ByVal txt_senha As String) As Result
         Dim retorno As New Result()
         Dim objUsuario As New Usuario()
         Dim objUsuarioBO As New UsuarioBO()
 
-        objUsuario.id = id
+        objUsuario.txt_email = txt_email.ToString()
+        objUsuario.txt_senha = txt_senha.ToString()
+
+        retorno = objUsuarioBO.AutenticarUsuario(objUsuario)
+
+        Return retorno
+    End Function
+
+
+    <WebMethod(Description:="Listar usuário")> _
+    Public Function ListarUsuario(ByVal id As String, ByVal txt_nome As String, ByVal txt_email As String) As Result
+        Dim retorno As New Result()
+        Dim objUsuario As New Usuario()
+        Dim objUsuarioBO As New UsuarioBO()
+
+        If Not String.IsNullOrWhiteSpace(id) Then
+            objUsuario.id = Convert.ToInt32(id)
+        End If
+
         objUsuario.txt_nome = txt_nome.ToString()
-        objUsuario.txt_email = txt_senha.ToString()
+        objUsuario.txt_email = txt_email.ToString()
 
         retorno = objUsuarioBO.ListarUsuario(objUsuario)
 

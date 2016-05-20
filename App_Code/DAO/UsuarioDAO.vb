@@ -129,6 +129,52 @@ Public Class UsuarioDAO
         Return retorno
     End Function
 
+    Public Function AutenticarUsuario(ByVal objUsuario As Usuario) As Result
+        Dim retorno As New Result()
+        Dim u As New Usuario()
+        Dim listaUsuario As New List(Of Usuario)
+
+        Try
+            Using SqlConn As SqlConnection = Conexao.AbrirConexao()
+                Using SqlComm As New SqlCommand()
+                    SqlComm.Connection = SqlConn
+                    SqlComm.CommandType = CommandType.Text
+                    SqlComm.CommandText = "SELECT id, cod_ativo FROM tbl_usuario WHERE LTRIM(RTRIM(UPPER(txt_email))) = '" & Trim(UCase(objUsuario.txt_email)) & "'"
+                    SqlComm.CommandText &= " AND LTRIM(RTRIM(txt_senha)) = '" & Trim(objUsuario.txt_senha) & "' AND cod_ativo = 1"
+
+                    Using da As New SqlDataAdapter(SqlComm)
+                        Using ds As New DataSet()
+                            da.Fill(ds, "Usuarios")
+                            For Each table As DataTable In ds.Tables
+                                For Each row As DataRow In table.Rows
+                                    u = New Usuario()
+                                    u.id = row("id")
+                                    u.cod_ativo = row("cod_ativo")
+
+                                    listaUsuario.Add(u)
+                                Next
+                            Next
+
+                            If ds.Tables(0).Rows.Count > 0 Then
+                                retorno.status = ResponseStatus.SUCESSO.Texto
+                                retorno.Usuarios = listaUsuario
+                            Else
+                                retorno.status = ResponseStatus.FALHA.Texto
+                            End If
+
+                        End Using
+                    End Using
+                End Using
+            End Using
+
+        Catch ex As Exception
+            retorno.status = ResponseStatus.FALHA.Texto
+            retorno.exception = clsException.CarregarErro(ex.Source, ex.Message, ex.StackTrace)
+        End Try
+
+        Return retorno
+    End Function
+
     Public Function ListarUsuario(ByVal objUsuario As Usuario) As Result
         Dim retorno As New Result()
         Dim u As New Usuario()
@@ -147,11 +193,11 @@ Public Class UsuarioDAO
                     End If
 
                     If Not String.IsNullOrWhiteSpace(objUsuario.txt_nome) Then
-                        SqlComm.CommandText &= " AND txt_nome LIKE '%" & Trim(objUsuario.txt_nome) & "%'"
+                        SqlComm.CommandText &= " AND TRIM(UPPER(txt_nome)) LIKE '%" & Trim(UCase(objUsuario.txt_nome)) & "%'"
                     End If
 
                     If Not String.IsNullOrWhiteSpace(objUsuario.txt_email) Then
-                        SqlComm.CommandText &= " AND txt_email LIKE '%" & Trim(objUsuario.txt_email) & "%'"
+                        SqlComm.CommandText &= " AND LTRIM(RTRIM(UPPER(txt_email))) = '" & Trim(UCase(objUsuario.txt_email)) & "'"
                     End If
 
                     Using da As New SqlDataAdapter(SqlComm)
@@ -252,6 +298,36 @@ Public Class UsuarioDAO
         Return retorno
     End Function
 
+    Public Function VerificaUsuarioInativo(ByVal objUsuario As Usuario) As Result
+        Dim retorno As New Result()
+        Dim u As New Usuario()
+        Dim listaUsuario As New List(Of Usuario)
+
+        Try
+            Using SqlConn As SqlConnection = Conexao.AbrirConexao()
+                Using SqlComm As New SqlCommand()
+                    SqlComm.Connection = SqlConn
+                    SqlComm.CommandType = CommandType.Text
+                    SqlComm.CommandText = "SELECT COUNT(id) FROM tbl_usuario WHERE LTRIM(RTRIM(UPPER(txt_email))) = '" & Trim(UCase(objUsuario.txt_email)) & "'"
+                    SqlComm.CommandText &= " AND LTRIM(RTRIM(txt_senha)) = '" & Trim(objUsuario.txt_senha) & "' AND cod_ativo = 0"
+
+                    Dim qtd As Integer = SqlComm.ExecuteScalar()
+
+                    If qtd > 0 Then
+                        retorno.status = ResponseStatus.FALHA.Texto
+                    Else
+                        retorno.status = ResponseStatus.SUCESSO.Texto
+                    End If
+
+                End Using
+            End Using
+        Catch ex As Exception
+            retorno.status = ResponseStatus.FALHA.Texto
+            retorno.exception = clsException.CarregarErro(ex.Source, ex.Message, ex.StackTrace)
+        End Try
+
+        Return retorno
+    End Function
     Public Function ValidaSenhaAtual(ByVal objUsuario As Usuario) As Boolean
         Dim retorno As Boolean = False
 

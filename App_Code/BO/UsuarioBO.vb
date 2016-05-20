@@ -45,6 +45,30 @@ Public Class UsuarioBO
 
         Return retorno
     End Function
+
+    Public Function AutenticarUsuario(ByVal objUsuario As Usuario) As Result
+        Dim retorno As New Result()
+        Dim usuarioDAO As New UsuarioDAO()
+
+        If String.IsNullOrWhiteSpace(objUsuario.txt_email) Then
+            retorno.exception = clsException.CarregarErro("Validação Dados", Mensagem.MN002.TextoFormatado("E-MAIL"), Mensagem.MN002.TextoFormatado("txt_email"))
+            retorno.status = ResponseStatus.FALHA.Texto
+        ElseIf String.IsNullOrWhiteSpace(objUsuario.txt_senha) Then
+            retorno.exception = clsException.CarregarErro("Validação Dados", Mensagem.MN002.TextoFormatado("SENHA"), Mensagem.MN002.TextoFormatado("txt_senha"))
+            retorno.status = ResponseStatus.FALHA.Texto
+        Else
+            retorno = usuarioDAO.VerificaUsuarioInativo(objUsuario)
+
+            If retorno.status.Equals(ResponseStatus.SUCESSO.Texto) Then
+                retorno = usuarioDAO.AutenticarUsuario(objUsuario)
+            Else
+                retorno.exception = clsException.CarregarErro("Validação Dados", Mensagem.MN005.Texto, Mensagem.MN005.Texto)
+                retorno.status = ResponseStatus.FALHA.Texto
+            End If
+        End If
+
+        Return retorno
+    End Function
     Public Function AlterarSenha(ByVal objUsuario As Usuario) As Result
         Dim retorno As New Result()
         Dim usuarioDAO As New UsuarioDAO()
